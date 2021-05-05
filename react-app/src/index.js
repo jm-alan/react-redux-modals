@@ -1,11 +1,36 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { Provider, useDispatch } from 'react-redux';
+
+import { setModalMount } from './store/modal';
 import App from './App';
+import configureStore from './store/index';
+
+import './index.css';
+
+const store = configureStore();
+
+const Root = () => {
+  const dispatch = useDispatch();
+  const modalMooringRef = useRef(null);
+
+  useEffect(() => {
+    dispatch(setModalMount(modalMooringRef.current));
+  }, [dispatch]);
+
+  return (
+    <>
+      <App />
+      <div ref={modalMooringRef} className='modal' />
+    </>
+  );
+};
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <Root />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

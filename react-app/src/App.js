@@ -1,56 +1,37 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import LoginForm from "./components/auth/LoginForm";
-import SignUpForm from "./components/auth/SignUpForm";
-import NavBar from "./components/NavBar";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
-import UsersList from "./components/UsersList";
-import User from "./components/User";
-import { authenticate } from "./services/auth";
+import React, { useEffect } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
-function App() {
-  const [authenticated, setAuthenticated] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+import NavBar from './components/NavBar';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import UsersList from './components/UsersList';
+import User from './components/User';
+import Modal from './components/Modal';
+
+import { authenticate } from './store/session';
+
+export default function App () {
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    (async() => {
-      const user = await authenticate();
-      if (!user.errors) {
-        setAuthenticated(true);
-      }
-      setLoaded(true);
-    })();
-  }, []);
-
-  if (!loaded) {
-    return null;
-  }
+    dispatch(authenticate());
+  }, [dispatch]);
 
   return (
     <BrowserRouter>
-      <NavBar setAuthenticated={setAuthenticated} />
+      <NavBar />
+      <Modal />
       <Switch>
-        <Route path="/login" exact={true}>
-          <LoginForm
-            authenticated={authenticated}
-            setAuthenticated={setAuthenticated}
-          />
-        </Route>
-        <Route path="/sign-up" exact={true}>
-          <SignUpForm authenticated={authenticated} setAuthenticated={setAuthenticated} />
-        </Route>
-        <ProtectedRoute path="/users" exact={true} authenticated={authenticated}>
-          <UsersList/>
+        <ProtectedRoute path='/users' exact>
+          <UsersList />
         </ProtectedRoute>
-        <ProtectedRoute path="/users/:userId" exact={true} authenticated={authenticated}>
+        <ProtectedRoute path='/users/:userId' exact>
           <User />
         </ProtectedRoute>
-        <ProtectedRoute path="/" exact={true} authenticated={authenticated}>
+        <Route path='/' exact>
           <h1>My Home Page</h1>
-        </ProtectedRoute>
+        </Route>
       </Switch>
     </BrowserRouter>
   );
 }
-
-export default App;

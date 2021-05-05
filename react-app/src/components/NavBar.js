@@ -1,37 +1,51 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import LogoutButton from './auth/LogoutButton';
 
-const NavBar = ({ setAuthenticated }) => {
+import { showModal, setCurrentModal } from '../store/modal';
+import LoginForm from '../components/auth/LoginForm';
+import SignupForm from '../components/auth/SignUpForm';
+
+const NavBar = () => {
+  const dispatch = useDispatch();
+  const showLogin = () => {
+    dispatch(setCurrentModal(LoginForm));
+    dispatch(showModal());
+  };
+  const showSignup = () => {
+    dispatch(setCurrentModal(SignupForm));
+    dispatch(showModal());
+  };
   return (
     <nav>
       <ul>
         <li>
-          <NavLink to="/" exact={true} activeClassName="active">
+          <NavLink to='/' exact activeClassName='active'>
             Home
           </NavLink>
         </li>
         <li>
-          <NavLink to="/login" exact={true} activeClassName="active">
-            Login
-          </NavLink>
+          <button onClick={showLogin}>
+            Log In
+          </button>
         </li>
         <li>
-          <NavLink to="/sign-up" exact={true} activeClassName="active">
+          <button onClick={showSignup}>
             Sign Up
-          </NavLink>
+          </button>
         </li>
         <li>
-          <NavLink to="/users" exact={true} activeClassName="active">
+          <NavLink to='/users' exact activeClassName='active'>
             Users
           </NavLink>
         </li>
         <li>
-          <LogoutButton setAuthenticated={setAuthenticated} />
+          <LogoutButton />
         </li>
       </ul>
     </nav>
   );
-}
+};
 
 export default NavBar;
