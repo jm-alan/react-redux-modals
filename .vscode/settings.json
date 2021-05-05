@@ -1,0 +1,6 @@
+{
+  "python.pythonPath": "/home/josh/.local/share/virtualenvs/pipenv_test-XtGBkzd8/bin/python",
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true,
+  "python.linting.pycodestyleEnabled": true
+}
