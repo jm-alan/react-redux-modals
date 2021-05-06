@@ -9,6 +9,7 @@ import './modal.css';
 export default function Modal () {
   const dispatch = useDispatch();
 
+  const user = useSelector(state => state.session.user);
   const mount = useSelector(state => state.modal.mount);
   const display = useSelector(state => state.modal.display);
   const Current = useSelector(state => state.modal.current);
@@ -17,7 +18,7 @@ export default function Modal () {
     dispatch(hideModal());
   };
 
-  return mount && display && ReactDOM.createPortal(
+  return !user && mount && display && ReactDOM.createPortal(
     <div onClick={onClose} className='modal-background'>
       <div
         onClick={e => e.stopPropagation()}
